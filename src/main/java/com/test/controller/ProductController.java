@@ -1,7 +1,6 @@
 package com.test.controller;
 
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,24 +44,27 @@ public class ProductController {
         return productRepository.save(product);
     }
 
-	
+	//Get all products
 	@GetMapping
     public Page<Product> getAll(@RequestParam(defaultValue = "0") int page) {
         return productRepository.findAll(PageRequest.of(page, 2));
     }
 
+	// GET product by Id 
 	@GetMapping("/{id}")
     public Product getById(@PathVariable Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id " + id));
     }
 
+	// update product by id
     @PutMapping("/{id}")
     public Product update(@PathVariable Long id, @RequestBody Product product) {
         product.setId(id);
         return productRepository.save(product);
     }
 
+    //Delete product by id
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         productRepository.deleteById(id);

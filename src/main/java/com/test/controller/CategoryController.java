@@ -33,6 +33,7 @@ public class CategoryController {
 	@Autowired
 	private ProductRepository productRepository;
 	
+	//Save Category
 	@PostMapping
     public ResponseEntity<Category> create(@RequestBody Category category) {
 		  System.out.println("Received category: " + category.getName());
@@ -40,28 +41,13 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    //Get All Category List Page Contains two category in one page
+    //Get All Category List, Page Contains two category in one page
 	@GetMapping
     public ResponseEntity<org.springframework.data.domain.Page<Category>> getAll(@RequestParam(defaultValue = "0") int page) {
         org.springframework.data.domain.Page<Category> categories = categoryRepository.findAll(PageRequest.of(page, 2));
         return ResponseEntity.ok(categories);
     }
 
-	 
-	// Add multiple products to a category
-	  /*  @PostMapping("/{id}/products")
-	    public List<Product> addProductsToCategory(@PathVariable Long id, @RequestBody List<Product> products) {
-	        Optional<Category> categoryOpt = categoryRepository.findById(id);
-	        if (categoryOpt.isPresent()) {
-	            Category category = categoryOpt.get();
-	            for (Product product : products) {
-	                product.setCategory(category);
-	            }
-	            return productRepository.saveAll(products);
-	        } else {
-	            throw new RuntimeException("Category not found with id " + id);
-	        }
-	    }*/
 
 	    // Fetch category by ID
 	    @GetMapping("/{id}")
