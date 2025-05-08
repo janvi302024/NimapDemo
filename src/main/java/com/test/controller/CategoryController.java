@@ -23,28 +23,27 @@ import com.test.model.Category;
 import com.test.model.Product;
 import com.test.repo.CategoryRepository;
 import com.test.repo.ProductRepository;
+import com.test.service.CategoryService;
 
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
-	@Autowired
-	private CategoryRepository categoryRepository;
 	
 	@Autowired
-	private ProductRepository productRepository;
+	CategoryService categoryService;
 	
 	//Save Category
 	@PostMapping
     public ResponseEntity<Category> create(@RequestBody Category category) {
 		  System.out.println("Received category: " + category.getName());
-        Category saved = categoryRepository.save(category);
+        Category saved = categoryService.save(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     //Get All Category List, Page Contains two category in one page
 	@GetMapping
     public ResponseEntity<org.springframework.data.domain.Page<Category>> getAll(@RequestParam(defaultValue = "0") int page) {
-        org.springframework.data.domain.Page<Category> categories = categoryRepository.findAll(PageRequest.of(page, 2));
+        org.springframework.data.domain.Page<Category> categories = categoryService.findAll(PageRequest.of(page, 2));
         return ResponseEntity.ok(categories);
     }
 
@@ -52,18 +51,18 @@ public class CategoryController {
 	    // Fetch category by ID
 	    @GetMapping("/{id}")
 	    public Optional<Category> getById(@PathVariable Long id) {
-	        return categoryRepository.findById(id);
+	        return categoryService.findById(id);
 	    }
         // Update Category
 	    @PutMapping("/{id}")
 	    public Category update(@PathVariable Long id, @RequestBody Category category) {
 	        category.setId(id);
-	        return categoryRepository.save(category);
+	        return categoryService.save(category);
 	    }
         //Delete Category
 	    @DeleteMapping("/{id}")
 	    public void delete(@PathVariable Long id) {
-	        categoryRepository.deleteById(id);
+	    	categoryService.deleteById(id);
 	    }
 
 }

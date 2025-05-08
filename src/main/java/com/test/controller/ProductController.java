@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.test.model.Category;
 import com.test.model.Product;
-import com.test.repo.CategoryRepository;
-import com.test.repo.ProductRepository;
+import com.test.service.CategoryService;
+import com.test.service.ProductService;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 	@Autowired
-	private ProductRepository productRepository;
+	private ProductService productService;
 	
 	@Autowired
-	private CategoryRepository categoryRepository;
+	private CategoryService categoryService;
 	
 	 // Create a product and add it to its category
     @PostMapping
@@ -35,25 +35,25 @@ public class ProductController {
             throw new RuntimeException("Category ID must be provided in the product request");
         }
 
-        Optional<Category> categoryOpt = categoryRepository.findById(product.getCategory().getId());
+        Optional<Category> categoryOpt = categoryService.findById(product.getCategory().getId());
         if (categoryOpt.isEmpty()) {
             throw new RuntimeException("Category not found with id " + product.getCategory().getId());
         }
 
         product.setCategory(categoryOpt.get());
-        return productRepository.save(product);
+        return productService.save(product);
     }
 
 	//Get all products
 	@GetMapping
     public Page<Product> getAll(@RequestParam(defaultValue = "0") int page) {
-        return productRepository.findAll(PageRequest.of(page, 2));
+        return productService.findAll(PageRequest.of(page, 2));
     }
 
 	// GET product by Id 
 	@GetMapping("/{id}")
     public Product getById(@PathVariable Long id) {
-        return productRepository.findById(id)
+        return productService.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id " + id));
     }
 
@@ -61,13 +61,13 @@ public class ProductController {
     @PutMapping("/{id}")
     public Product update(@PathVariable Long id, @RequestBody Product product) {
         product.setId(id);
-        return productRepository.save(product);
+        return productService.save(product);
     }
 
     //Delete product by id
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        productRepository.deleteById(id);
+        productService.deleteById(id);
     }
 
 	

@@ -20,7 +20,6 @@ public class Category {
 	
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Product> products; // No need for JsonManagedReference
-
 	
 	public List<Product> getProducts() {
 		return products;
